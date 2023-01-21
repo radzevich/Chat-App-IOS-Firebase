@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
     
@@ -181,9 +182,9 @@ class RegisterViewController: UIViewController {
 
         guard let firstName = firstNameField.text,
               let lastName = lastNameField.text,
-              let emai = emailField.text,
+              let email = emailField.text,
               let password = passwordField.text,
-              !emai.isEmpty,
+              !email.isEmpty,
               !password.isEmpty,
               !firstName.isEmpty,
               !lastName.isEmpty,
@@ -193,6 +194,15 @@ class RegisterViewController: UIViewController {
         }
         
         // Firebase login
+        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            guard let result = authResult, error == nil else {
+                print("Error creating user")
+                return
+            }
+            
+            let user = result.user
+            print("Crreated user: \(user)")
+        }
     }
     
     func alertUserLoginError() {

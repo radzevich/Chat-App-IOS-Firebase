@@ -8,22 +8,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb1368391373976857</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>com.googleusercontent.apps.114382285151-b4d8a05vlhgg6ka62mv6t7t41a31nb1v</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb1368391373976857</string>
 			</array>
 		</dict>
 	</array>
@@ -38,18 +23,8 @@
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>
 	</array>
-    
-    <key>GIDClientID</key>
-    <string>114382285151-b4d8a05vlhgg6ka62mv6t7t41a31nb1v.apps.googleusercontent.com</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.114382285151-b4d8a05vlhgg6ka62mv6t7t41a31nb1v</string>
-        </array>
-      </dict>
-    </array>
+	<key>GIDClientID</key>
+	<string>114382285151-b4d8a05vlhgg6ka62mv6t7t41a31nb1v.apps.googleusercontent.com</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

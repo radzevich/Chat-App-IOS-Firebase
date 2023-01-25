@@ -17,7 +17,7 @@ struct Sender: SenderType {
 class ChatViewController: MessagesViewController {
     
     private var messages = [Message]()
-    
+
     private let selfSender = Sender(photoURL: "",
                                     senderId: "1",
                                     displayName: "Joe Smith")

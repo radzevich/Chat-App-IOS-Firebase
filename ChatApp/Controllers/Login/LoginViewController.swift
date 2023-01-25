@@ -1,6 +1,7 @@
 import UIKit
 import FBSDKLoginKit
 import FirebaseAuth
+import GoogleSignIn
 
 class LoginViewController: UIViewController {
     
@@ -73,9 +74,26 @@ class LoginViewController: UIViewController {
 
         return button
     }()
+    
+    private let googleLoginButton = GIDSignInButton()
+    
+    private var loginObserver: NSObjectProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotification,
+                                                               object: nil,
+                                                               queue: .main,
+                                                               using: { [weak self]_ in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+        })
+        
         title = "Log In"
         view.backgroundColor = .white
         
@@ -98,6 +116,15 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(passwordField)
         scrollView.addSubview(loginButton)
         scrollView.addSubview(facebookLoginButton)
+        scrollView.addSubview(googleLoginButton)
+        
+        googleLoginButton.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchDown)
+    }
+
+    deinit {
+        if let observer = loginObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -129,6 +156,11 @@ class LoginViewController: UIViewController {
                                    y: loginButton.bottom + 20,
                                    width: scrollView.width - 69,
                                    height: 52)
+        
+        googleLoginButton.frame = CGRect(x: 30,
+                                           y: facebookLoginButton.bottom + 10,
+                                           width: scrollView.width - 69,
+                                           height: 52)
     }
 
     @objc private func loginButtonTapped() {
@@ -142,11 +174,7 @@ class LoginViewController: UIViewController {
         }
 
         // Firebase login
-        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            guard let strongSelf = self else {
-                return
-            }
-            
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             guard let result = authResult, error == nil else {
                 print("Failed to log in user with email: \(email)")
                 return
@@ -155,7 +183,7 @@ class LoginViewController: UIViewController {
             let user = result.user
             print("Logged In User: \(user)")
 
-            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            NotificationCenter.default.post(name: .didLogInNotification, object: nil)
         }
     }
     
@@ -169,6 +197,52 @@ class LoginViewController: UIViewController {
                                       handler: nil))
         
         present(alert, animated: true)
+    }
+    
+    @objc private func googleLoginButtonTapped() {
+        // Start the sign in flow!
+        GIDSignIn.sharedInstance.signIn(withPresenting: self) { signInResult, error in
+            if let error = error {
+                print("Failed to log in user with Google: \(error)")
+                return
+            }
+            
+            guard
+                let email = signInResult?.user.profile?.email,
+                let firstName = signInResult?.user.profile?.givenName,
+                let lastName = signInResult?.user.profile?.familyName,
+                let idToken = signInResult?.user.idToken?.tokenString,
+                let accessToken = signInResult?.user.accessToken.tokenString
+            else {
+                return
+            }
+
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                           accessToken: accessToken)
+
+            print("Successfully logged in with Google")
+
+            DatabaseManager.shared.userExists(with: email, completion: { exists in
+                if !exists {
+                    DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
+                                                                        lastName: lastName,
+                                                                        emailAddress: email))
+                }
+            })
+            
+            FirebaseAuth.Auth.auth().signIn(with: credential) { authResult, error in
+                guard authResult != nil, error == nil else {
+                    if let error = error {
+                        print("Facebook credential login failed, MFA may be needed - \(error)")
+                    }
+                    return
+                }
+                
+                print("Successfully logged in")
+                
+                NotificationCenter.default.post(name: .didLogInNotification, object: nil)
+            }
+        }
     }
     
     @objc private func registerButtonTapped() {
@@ -239,11 +313,7 @@ extension LoginViewController: LoginButtonDelegate {
             
             let credential = FacebookAuthProvider.credential(withAccessToken: token)
             
-            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] authResult, error in
-                guard let strongSelf = self else {
-                    return
-                }
-                
+            FirebaseAuth.Auth.auth().signIn(with: credential) { authResult, error in
                 guard authResult != nil, error == nil else {
                     if let error = error {
                         print("Facebook credential login failed, MFA may be needed - \(error)")
@@ -253,7 +323,7 @@ extension LoginViewController: LoginButtonDelegate {
                 
                 print("Successfully logged in")
                 
-                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+                NotificationCenter.default.post(name: .didLogInNotification, object: nil)
             }
         })
     }

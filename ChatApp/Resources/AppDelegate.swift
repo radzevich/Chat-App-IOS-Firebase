@@ -1,6 +1,7 @@
 import UIKit
 import FBSDKCoreKit
 import Firebase
+import GoogleSignIn
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -9,6 +10,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         // Firebase
         FirebaseApp.configure()
+        
+        // Google
+        GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+            if error != nil || user == nil {
+                // Show the app's signed-out state.
+            } else {
+                // Show the app's signed-in state.
+            }
+        }
+        
         
         // Facebook
         ApplicationDelegate.shared.application(
@@ -27,13 +38,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         // Facebook
-        ApplicationDelegate.shared.application(
+        if ApplicationDelegate.shared.application(
             app,
             open: url,
             sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
             annotation: options[UIApplication.OpenURLOptionsKey.annotation]
-        )
+        ) {
+            return true
+        }
         
-        return true
+        if GIDSignIn.sharedInstance.handle(url) {
+            return true
+        }
+
+        return false
     }
 }

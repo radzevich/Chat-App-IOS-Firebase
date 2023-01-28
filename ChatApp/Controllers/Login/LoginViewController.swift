@@ -194,6 +194,9 @@ class LoginViewController: UIViewController {
             }
             
             let user = result.user
+
+            UserDefaults.standard.set(email, forKey: "email")
+            
             print("Logged In User: \(user)")
 
             NotificationCenter.default.post(name: .didLogInNotification, object: nil)
@@ -229,6 +232,8 @@ class LoginViewController: UIViewController {
             else {
                 return
             }
+
+            UserDefaults.standard.set(email, forKey: "email")
 
             let credential = GoogleAuthProvider.credential(withIDToken: idToken,
                                                            accessToken: accessToken)
@@ -343,7 +348,9 @@ extension LoginViewController: LoginButtonDelegate {
                 print("Failed to get email and name from Facebook result")
                 return
             }
-            
+
+            UserDefaults.standard.set(email, forKey: "email")
+
             DatabaseManager.shared.userExists(with: email, completion: { exists in
                 if !exists {
                     let chatUser = ChatAppUser(firstName: firstName,

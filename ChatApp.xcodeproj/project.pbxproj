@@ -10,6 +10,7 @@
 		277E3C9718B67843514E0D14 /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 584E30EC82C1C8212CB86171 /* Pods_ChatApp.framework */; };
 		DD5B03D82981D416002147E1 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5B03D72981D416002147E1 /* ChatViewController.swift */; };
 		DD5B03DA2981E14F002147E1 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5B03D92981E14F002147E1 /* StorageManager.swift */; };
+		DD5B03DC29886272002147E1 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5B03DB29886272002147E1 /* ConversationTableViewCell.swift */; };
 		DD5D9A26296B332000411E0F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A25296B332000411E0F /* AppDelegate.swift */; };
 		DD5D9A28296B332000411E0F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A27296B332000411E0F /* SceneDelegate.swift */; };
 		DD5D9A2A296B332000411E0F /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A29296B332000411E0F /* ConversationsViewController.swift */; };
@@ -33,6 +34,7 @@
 		D90F8A8C270A7D606411A6A0 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		DD5B03D72981D416002147E1 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		DD5B03D92981E14F002147E1 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
+		DD5B03DB29886272002147E1 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		DD5D9A22296B332000411E0F /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD5D9A25296B332000411E0F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD5D9A27296B332000411E0F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			children = (
 				DD5D9A3E296B341900411E0F /* Storyboards */,
 				DD5D9A2E296B332600411E0F /* Assets.xcassets */,
+				DD5B03DB29886272002147E1 /* ConversationTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				DD5D9A26296B332000411E0F /* AppDelegate.swift in Sources */,
 				DD5D9A4B296B362B00411E0F /* ProfileViewController.swift in Sources */,
 				DD5D9A28296B332000411E0F /* SceneDelegate.swift in Sources */,
+				DD5B03DC29886272002147E1 /* ConversationTableViewCell.swift in Sources */,
 				DD5B03D82981D416002147E1 /* ChatViewController.swift in Sources */,
 				DD5D9A45296B35BE00411E0F /* PhotoViewerViewController.swift in Sources */,
 				DD5B03DA2981E14F002147E1 /* StorageManager.swift in Sources */,

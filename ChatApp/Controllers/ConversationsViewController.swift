@@ -58,7 +58,7 @@ class ConversationsViewController: UIViewController {
     }
     
     private func startListeningForConversations() {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+        guard let email = FirebaseAuth.Auth.auth().currentUser?.email as? String else {
             print("starting conversation fetch failed because of missed email")
             return
         }

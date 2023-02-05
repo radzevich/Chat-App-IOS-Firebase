@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseAuth
 import MessageKit
 import InputBarAccessoryView
 
@@ -61,7 +62,7 @@ class ChatViewController: MessagesViewController {
     private var messages = [Message]()
 
     private var selfSender: Sender? = {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+        guard let email = FirebaseAuth.Auth.auth().currentUser?.email as? String else {
             return nil
         }
         
@@ -141,19 +142,43 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             return
         }
         
-        print("Sending: \(text)")
-        
+        let message = Message(sender: selfSender,
+                              messageId: messageId,
+                              sentDate: Date(),
+                              kind: .text(text))
+
+        print("Sending: \(message)")
+
         // Send Message
         if isNewConversation {
             // create convo in database
-            let message = Message(sender: selfSender,
-                                  messageId: messageId,
-                                  sentDate: Date(),
-                                  kind: .text(text))
+            
 
             DatabaseManager.shared.createNewConversation(with: otherUserEmail,
                                                          otherUserName: self.title ?? "User",
-                                                         firstMessage: message) { success in
+                                                         firstMessage: message) { [weak self] success in
+                if success {
+                    print("message sent")
+                    self?.isNewConversation = false
+                }
+                else {
+                    print("failed to send")
+                }
+            }
+        }
+        else {
+            guard
+                let conversationId = conversationId,
+                let name = self.title
+            else {
+                return
+            }
+            
+            // append to an existing conversation
+            DatabaseManager.shared.sendMessage(to: conversationId,
+                                               otherUserEmail: otherUserEmail,
+                                               name: name,
+                                               newMessage: message) { success in
                 if success {
                     print("message sent")
                 }
@@ -162,15 +187,12 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 }
             }
         }
-        else {
-            // append to an existing conversation
-        }
     }
     
     private func createMessageId() -> String? {
         // date, otherUserEmail, senderEmail, randomInt
         guard
-            let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String
+            let currentUserEmail = FirebaseAuth.Auth.auth().currentUser?.email as? String
         else {
             return nil
         }

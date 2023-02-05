@@ -19,7 +19,7 @@ class ProfileViewController: UIViewController {
     }
     
     func createTableHeader() -> UIView? {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+        guard let email = FirebaseAuth.Auth.auth().currentUser?.email as? String else {
             return nil
         }
         

@@ -1,15 +1,16 @@
 import UIKit
 import JGProgressHUD
+import FirebaseAuth
 
 class NewConversationViewController: UIViewController {
     
-    public var completion: (([String: String]) -> (Void))?
+    public var completion: ((SearchResult) -> (Void))?
 
     private let spinner = JGProgressHUD(style: .dark)
     
     private var users = [[String: String]]()
 
-    private var results  = [[String: String]]()
+    private var results  = [SearchResult]()
 
     private var hasFetched = false
 
@@ -23,8 +24,8 @@ class NewConversationViewController: UIViewController {
     private let tableView: UITableView = {
         let table = UITableView()
         table.isHidden = true
-        table.register(UITableViewCell.self,
-                       forCellReuseIdentifier: "cell")
+        table.register(NewConversationCell.self,
+                       forCellReuseIdentifier: NewConversationCell.identifier)
 
         return table
     }()
@@ -82,8 +83,10 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = results[indexPath.row]["name"]
+        let model = results[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: NewConversationCell.identifier,
+                                                 for: indexPath) as! NewConversationCell
+        cell.configure(with: model)
         
         return cell
     }
@@ -97,6 +100,10 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
         dismiss(animated: true, completion: { [weak self] in
             self?.completion?(targetUserData)
         })
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90;
     }
 }
 
@@ -136,19 +143,43 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     func fiterUsers(with term: String) {
         // either show filtered useres or not found label
-        guard hasFetched else {
+        guard
+            let currentUserEmail = FirebaseAuth.Auth.auth().currentUser?.email,
+            hasFetched
+        else {
             return
         }
         
+        let safeEmail = DatabaseManager.safeEmail(emailAddress: currentUserEmail)
+
         self.spinner.dismiss(animated: true)
         
-        self.results = self.users.filter({
-            guard let name = $0["name"]?.lowercased() else {
-                return false
-            }
+        self.results = self.users
+            .filter({
+                guard
+                    let email = $0["email"],
+                    email != safeEmail
+                else {
+                    return false
+                }
+                
+                guard
+                    let name = $0["name"]?.lowercased()
+                else {
+                    return false
+                }
+                
+                return name.hasPrefix(term.lowercased())
+            }).compactMap({
+                guard
+                    let name = $0["name"],
+                    let email = $0["email"]
+                else {
+                    return nil
+                }
 
-            return name.hasPrefix(term.lowercased())
-        })
+                return SearchResult(name: name, email: email)
+            })
         
         updateUI()
     }
@@ -164,4 +195,9 @@ extension NewConversationViewController: UISearchBarDelegate {
         }
     }
     
+}
+
+struct SearchResult {
+    let name: String
+    let email: String
 }

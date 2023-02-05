@@ -14,6 +14,12 @@
 	</array>
 	<key>FacebookAppID</key>
 	<string>1368391373976857</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please allow access to take a profile pictue.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Please allow access to select a photo for your profile.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Please allow access to send audio and video messages.</string>
 	<key>FacebookClientToken</key>
 	<string>932af53d78115293897b987e23d65d5b</string>
 	<key>FacebookDisplayName</key>

@@ -96,17 +96,10 @@ class ConversationsViewController: UIViewController {
         present(navVC, animated: true)
     }
     
-    private func createNewConversation(result: [String: String]) {
-        guard
-            let name = result["name"],
-            let email = result["email"]
-        else {
-            return
-        }
-                
-        let vc = ChatViewController(with: email, id: nil)
+    private func createNewConversation(result: SearchResult) {
+        let vc = ChatViewController(with: result.email, id: nil)
         vc.isNewConversation = true
-        vc.title = name
+        vc.title = result.email
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }

@@ -42,6 +42,8 @@ class ConversationsViewController: UIViewController {
         return label
     }()
 
+    private var loginObserver: NSObjectProtocol?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,12 +57,27 @@ class ConversationsViewController: UIViewController {
         setupTableView()
         fetchConversations()
         startListeningForConversations()
+
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotification,
+                                                               object: nil,
+                                                               queue: .main,
+                                                               using: { [weak self]_ in
+            guard let strongSelf = self else {
+                return
+            }
+
+            strongSelf.startListeningForConversations()
+        })
     }
     
     private func startListeningForConversations() {
         guard let email = FirebaseAuth.Auth.auth().currentUser?.email as? String else {
             print("starting conversation fetch failed because of missed email")
             return
+        }
+
+        if let observer = loginObserver {
+            NotificationCenter.default.removeObserver(observer)
         }
 
         print("starting conversation fetch")

@@ -39,19 +39,16 @@ extension DatabaseManager {
     public func userExists(with email: String,
                            completion: @escaping ((Bool) -> Void)) {
         
-        let safeEmail = email
-            .replacingOccurrences(of: ".", with: "-")
-            .replacingOccurrences(of: "@", with: "-")
-
+        let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
         database.child(safeEmail).observeSingleEvent(of: .value,
-                                                 with: { snapshot in
+                                                     with: { snapshot in
 
             guard snapshot.value as? String != nil else {
-                completion(false)
+                completion(true)
                 return
             }
 
-            completion(true)
+            completion(false)
         })
     }
 

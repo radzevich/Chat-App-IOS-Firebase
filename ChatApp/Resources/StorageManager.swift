@@ -1,6 +1,7 @@
 import Foundation
 import FirebaseStorage
 
+/// Allows you to get, fetch and upload files to firebase storage
 final class StorageManager {
 
     static let shared = StorageManager()

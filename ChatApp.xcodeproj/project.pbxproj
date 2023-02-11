@@ -21,11 +21,14 @@
 		DD5D9A40296B357100411E0F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A3F296B357100411E0F /* LoginViewController.swift */; };
 		DD5D9A42296B358D00411E0F /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A41296B358D00411E0F /* RegisterViewController.swift */; };
 		DD5D9A45296B35BE00411E0F /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A44296B35BE00411E0F /* PhotoViewerViewController.swift */; };
-		DD5D9A47296B35FA00411E0F /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A46296B35FA00411E0F /* VideoPlayerViewController.swift */; };
 		DD5D9A49296B361200411E0F /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A48296B361200411E0F /* NewConversationViewController.swift */; };
 		DD5D9A4B296B362B00411E0F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A4A296B362B00411E0F /* ProfileViewController.swift */; };
 		DD5D9A4E296B404100411E0F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5D9A4D296B404100411E0F /* Extensions.swift */; };
 		DDAE23C5299789A800A7814B /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAE23C4299789A800A7814B /* LocationPickerViewController.swift */; };
+		DDAE23C82998175000A7814B /* ConversationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAE23C72998175000A7814B /* ConversationModels.swift */; };
+		DDAE23CA2998177600A7814B /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAE23C92998177600A7814B /* ChatModels.swift */; };
+		DDAE23CC299817BA00A7814B /* SearchResultsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAE23CB299817BA00A7814B /* SearchResultsModel.swift */; };
+		DDAE23CE299817F600A7814B /* ProfileModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAE23CD299817F600A7814B /* ProfileModels.swift */; };
 		DDB4335A297C883900AB14D0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DDB43359297C883900AB14D0 /* GoogleService-Info.plist */; };
 		DDB4335C297D910700AB14D0 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB4335B297D910700AB14D0 /* DatabaseManager.swift */; };
 /* End PBXBuildFile section */
@@ -49,11 +52,14 @@
 		DD5D9A3F296B357100411E0F /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		DD5D9A41296B358D00411E0F /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		DD5D9A44296B35BE00411E0F /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
-		DD5D9A46296B35FA00411E0F /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		DD5D9A48296B361200411E0F /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		DD5D9A4A296B362B00411E0F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		DD5D9A4D296B404100411E0F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DDAE23C4299789A800A7814B /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
+		DDAE23C72998175000A7814B /* ConversationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModels.swift; sourceTree = "<group>"; };
+		DDAE23C92998177600A7814B /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModels.swift; sourceTree = "<group>"; };
+		DDAE23CB299817BA00A7814B /* SearchResultsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsModel.swift; sourceTree = "<group>"; };
+		DDAE23CD299817F600A7814B /* ProfileModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModels.swift; sourceTree = "<group>"; };
 		DDB43359297C883900AB14D0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DDB4335B297D910700AB14D0 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		DDB4335D297DB58200AB14D0 /* ChatApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatApp.entitlements; sourceTree = "<group>"; };
@@ -127,7 +133,6 @@
 				DD5D9A4C296B37B600411E0F /* Login */,
 				DD5D9A29296B332000411E0F /* ConversationsViewController.swift */,
 				DD5D9A44296B35BE00411E0F /* PhotoViewerViewController.swift */,
-				DD5D9A46296B35FA00411E0F /* VideoPlayerViewController.swift */,
 				DD5D9A48296B361200411E0F /* NewConversationViewController.swift */,
 				DD5D9A4A296B362B00411E0F /* ProfileViewController.swift */,
 				DD5B03D72981D416002147E1 /* ChatViewController.swift */,
@@ -150,6 +155,10 @@
 		DD5D9A3B296B33C500411E0F /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				DDAE23C72998175000A7814B /* ConversationModels.swift */,
+				DDAE23C92998177600A7814B /* ChatModels.swift */,
+				DDAE23CB299817BA00A7814B /* SearchResultsModel.swift */,
+				DDAE23CD299817F600A7814B /* ProfileModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -330,19 +339,22 @@
 				DD5D9A40296B357100411E0F /* LoginViewController.swift in Sources */,
 				DD549D00299053A800C1441A /* NewConversationCell.swift in Sources */,
 				DDB4335C297D910700AB14D0 /* DatabaseManager.swift in Sources */,
+				DDAE23CA2998177600A7814B /* ChatModels.swift in Sources */,
 				DD5D9A42296B358D00411E0F /* RegisterViewController.swift in Sources */,
 				DD5D9A49296B361200411E0F /* NewConversationViewController.swift in Sources */,
 				DD5D9A2A296B332000411E0F /* ConversationsViewController.swift in Sources */,
-				DD5D9A47296B35FA00411E0F /* VideoPlayerViewController.swift in Sources */,
 				DD5D9A4E296B404100411E0F /* Extensions.swift in Sources */,
 				DD5D9A26296B332000411E0F /* AppDelegate.swift in Sources */,
 				DD5D9A4B296B362B00411E0F /* ProfileViewController.swift in Sources */,
 				DD5D9A28296B332000411E0F /* SceneDelegate.swift in Sources */,
 				DD5B03DC29886272002147E1 /* ConversationTableViewCell.swift in Sources */,
+				DDAE23CE299817F600A7814B /* ProfileModels.swift in Sources */,
 				DD5B03D82981D416002147E1 /* ChatViewController.swift in Sources */,
+				DDAE23C82998175000A7814B /* ConversationModels.swift in Sources */,
 				DD5D9A45296B35BE00411E0F /* PhotoViewerViewController.swift in Sources */,
 				DD5B03DA2981E14F002147E1 /* StorageManager.swift in Sources */,
 				DDAE23C5299789A800A7814B /* LocationPickerViewController.swift in Sources */,
+				DDAE23CC299817BA00A7814B /* SearchResultsModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

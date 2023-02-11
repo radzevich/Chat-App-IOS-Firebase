@@ -6,58 +6,6 @@ import InputBarAccessoryView
 import SDWebImage
 import AVKit
 
-struct Message: MessageType {
-    public var sender: SenderType
-    public var messageId: String
-    public var sentDate: Date
-    public var kind: MessageKind
-}
-
-extension MessageKind {
-    var messageKindString: String {
-        switch self {
-        case .text(_):
-            return "text"
-        case .attributedText(_):
-            return "attributedText"
-        case .photo(_):
-            return "photo"
-        case .video(_):
-            return "video"
-        case .location(_):
-            return "location"
-        case .emoji(_):
-            return "emoji"
-        case .audio(_):
-            return "audio"
-        case .contact(_):
-            return "contact"
-        case .linkPreview(_):
-            return "linkPreview"
-        case .custom(_):
-            return "custom"
-        }
-    }
-}
-
-struct Sender: SenderType {
-    public var photoURL: String
-    public var senderId: String
-    public var displayName: String
-}
-
-struct Media: MediaItem {
-    var url: URL?
-    var image: UIImage?
-    var placeholderImage: UIImage
-    var size: CGSize
-}
-
-struct Location: LocationItem {
-    var location: CLLocation
-    var size: CGSize
-}
-
 class ChatViewController: MessagesViewController {
 
     private var senderPhotoURL: URL?
@@ -295,7 +243,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard
             !text.replacingOccurrences(of: " ", with: "").isEmpty,
-            let selfSender = self.selfSender,
+            let selfSender = selfSender,
             let messageId = createMessageId()
         else {
             return
@@ -312,7 +260,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         if isNewConversation {
             // create convo in database
             DatabaseManager.shared.createNewConversation(with: otherUserEmail,
-                                                         otherUserName: self.title ?? "User",
+                                                         otherUserName: title ?? "User",
                                                          firstMessage: message) { [weak self] success in
                 if success {
                     print("message sent")
@@ -330,7 +278,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         else {
             guard
                 let conversationId = conversationId,
-                let name = self.title
+                let name = title
             else {
                 return
             }
@@ -381,8 +329,8 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
         guard
             let messageId = createMessageId(),
             let conversationId = conversationId,
-            let name = self.title,
-            let selfSender = self.selfSender
+            let name = title,
+            let selfSender = selfSender
         else {
             return
         }
@@ -550,7 +498,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         let sender = message.sender
         if sender.senderId == selfSender?.senderId {
             // our message we've sent
-            if let currentUserImageURL = self.senderPhotoURL {
+            if let currentUserImageURL = senderPhotoURL {
                 avatarView.sd_setImage(with: currentUserImageURL)
             }
             else {
@@ -577,14 +525,12 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         }
         else {
             // received message
-            if let otherUserImageURL = self.otherSenderPhotoURL {
+            if let otherUserImageURL = otherSenderPhotoURL {
                 avatarView.sd_setImage(with: otherUserImageURL)
             }
             else {
                 // fetch url
-                let email = self.otherUserEmail
-
-                let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+                let safeEmail = DatabaseManager.safeEmail(emailAddress: otherUserEmail)
                 let path = "images/\(safeEmail)_profile_picture.png"
 
                 StorageManager.shared.downoadURL(for: path) { [weak self] result in
@@ -640,7 +586,7 @@ extension ChatViewController: MessageCellDelegate {
             }
 
             let vc = PhotoViewerViewController(with: imageUrl)
-            self.navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
         case .video(let media):
             guard let videoUrl = media.url else {
                 return

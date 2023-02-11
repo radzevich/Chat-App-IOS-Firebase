@@ -118,7 +118,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         results.removeAll()
         spinner.show(in: view)
         
-        self.searchUsers(query: text)
+        searchUsers(query: text)
     }
     
     func searchUsers(query: String) {
@@ -195,9 +195,4 @@ extension NewConversationViewController: UISearchBarDelegate {
         }
     }
     
-}
-
-struct SearchResult {
-    let name: String
-    let email: String
 }

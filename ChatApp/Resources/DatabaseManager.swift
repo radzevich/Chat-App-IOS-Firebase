@@ -5,12 +5,16 @@ import FirebaseDatabase
 import RealmSwift
 import MessageKit
 
+/// Manage reads and writes of data in the Real Time Firebase database
 final class DatabaseManager {
     
-    static let shared = DatabaseManager()
+    /// Shared instance of class
+    public static let shared = DatabaseManager()
     
     private let database = Database.database(url: "https://chatapp-97bcf-default-rtdb.europe-west1.firebasedatabase.app").reference()
-    
+
+    private init() {}
+
     static func safeEmail(emailAddress: String) -> String {
         return emailAddress
             .replacingOccurrences(of: ".", with: "-")
@@ -20,8 +24,9 @@ final class DatabaseManager {
 
 extension DatabaseManager {
     
+    /// Returns dictionary nide in a child path
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
-        self.database.child("\(path)").observe(.value) { snapshot in
+        database.child("\(path)").observe(.value) { snapshot in
             guard let value = snapshot.value else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
@@ -37,6 +42,10 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     
+    /// Checks if users exists for a giving email
+    /// Parameters
+    /// - `email`: Target email to be checked
+    /// - `completion`: Async clausure to return
     public func userExists(with email: String,
                            completion: @escaping ((Bool) -> Void)) {
         
@@ -58,14 +67,18 @@ extension DatabaseManager {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
             "last_name": user.lastName
-        ]) { error, _ in
+        ]) { [weak self] error, _ in
+            guard let strongSelf = self else {
+                return
+            }
+            
             guard error == nil else {
                 print("failed to write to ddatabase")
                 completion(false)
                 return
             }
             
-            self.database.child("users").observeSingleEvent(of: .value) { snapshot in
+            strongSelf.database.child("users").observeSingleEvent(of: .value) { snapshot in
                 if var usersCollection = snapshot.value as? [[String: String]] {
                     // append to user dictionary
                     let newElement = [
@@ -75,7 +88,7 @@ extension DatabaseManager {
 
                     usersCollection.append(newElement)
                     
-                    self.database.child("users").setValue(usersCollection) { error, _ in
+                    strongSelf.database.child("users").setValue(usersCollection) { error, _ in
                         guard error == nil else {
                             completion(false)
                             return
@@ -93,7 +106,7 @@ extension DatabaseManager {
                         ]
                     ]
 
-                    self.database.child("users").setValue(newCollection) { error, _ in
+                    strongSelf.database.child("users").setValue(newCollection) { error, _ in
                         guard error == nil else {
                             completion(false)
                             return
@@ -107,7 +120,8 @@ extension DatabaseManager {
             completion(true)
         }
     }
-    
+
+    /// Gets all users from the database
     public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value as? [[String: String]] else {
@@ -118,9 +132,16 @@ extension DatabaseManager {
             completion(.success(value))
         }
     }
-    
+
     public enum DatabaseError: Error {
         case failedToFetch
+        
+        public var localizedDescription: String {
+            switch self {
+            case .failedToFetch:
+                return "This means smth failed"
+            }
+        }
     }
 }
 
@@ -487,8 +508,8 @@ extension DatabaseManager {
         }
         
         let currentEmail = DatabaseManager.safeEmail(emailAddress: myEmail)
-        
-        self.database.child("\(conversation)/messages").observeSingleEvent(of: .value) { [weak self] snapshot in
+
+        database.child("\(conversation)/messages").observeSingleEvent(of: .value) { [weak self] snapshot in
             guard
                 let strongSelf = self,
                 var currentMessages = snapshot.value as? [[String: Any]]

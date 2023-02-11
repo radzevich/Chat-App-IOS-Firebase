@@ -144,7 +144,7 @@ extension NewConversationViewController: UISearchBarDelegate {
     func fiterUsers(with term: String) {
         // either show filtered useres or not found label
         guard
-            let currentUserEmail = FirebaseAuth.Auth.auth().currentUser?.email,
+            let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String,
             hasFetched
         else {
             return

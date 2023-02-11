@@ -158,7 +158,7 @@ extension DatabaseManager {
     /// Create a new conversation with target user email and first message sent
     public func createNewConversation(with otherUserEmail: String, otherUserName: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
         guard
-            let currentEmail = FirebaseAuth.Auth.auth().currentUser?.email as? String,
+            let currentEmail = UserDefaults.standard.value(forKey: "email") as? String,
             let currentName = UserDefaults.standard.value(forKey: "name") as? String
         else {
             return
@@ -311,7 +311,7 @@ extension DatabaseManager {
         let dateString = ChatViewController.dateFormatter.string(from: messageDate)
 
         guard
-            let myEmail = FirebaseAuth.Auth.auth().currentUser?.email as? String
+            let myEmail = UserDefaults.standard.value(forKey: "email") as? String
         else {
             completion(false)
             return
@@ -480,7 +480,7 @@ extension DatabaseManager {
         // update recepient latest message
         
         guard
-            let myEmail = FirebaseAuth.Auth.auth().currentUser?.email
+            let myEmail = UserDefaults.standard.value(forKey: "email") as? String
         else {
             completion(false)
             return
@@ -534,7 +534,7 @@ extension DatabaseManager {
             let dateString = ChatViewController.dateFormatter.string(from: messageDate)
 
             guard
-                let myEmail = FirebaseAuth.Auth.auth().currentUser?.email as? String
+                let myEmail = UserDefaults.standard.value(forKey: "email") as? String
             else {
                 completion(false)
                 return
@@ -690,7 +690,7 @@ extension DatabaseManager {
     
     public func deleteConversation(conversationId: String, completion: @escaping (Bool) -> Void) {
         guard
-            let myEmail = FirebaseAuth.Auth.auth().currentUser?.email
+            let myEmail = UserDefaults.standard.value(forKey: "email") as? String
         else {
             completion(false)
             return
@@ -735,7 +735,7 @@ extension DatabaseManager {
     
     public func conversationExists(with targetRecepientEmail: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard
-            let senderEmaill = FirebaseAuth.Auth.auth().currentUser?.email
+            let senderEmaill = UserDefaults.standard.value(forKey: "email") as? String
         else {
             return
         }

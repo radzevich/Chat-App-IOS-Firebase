@@ -49,7 +49,10 @@ class ProfileViewController: UIViewController {
             actionSheet.addAction(UIAlertAction(title: "Log Out",
                                                 style: .destructive,
                                                 handler: { _ in
-                
+
+                UserDefaults.standard.setValue(nil, forKey: "email")
+                UserDefaults.standard.setValue(nil, forKey: "name")
+
                 // Log Out Facebook
                 FBSDKLoginKit.LoginManager().logOut()
                 
@@ -86,7 +89,7 @@ class ProfileViewController: UIViewController {
     }
     
     func createTableHeader() -> UIView? {
-        guard let email = FirebaseAuth.Auth.auth().currentUser?.email as? String else {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
         }
         

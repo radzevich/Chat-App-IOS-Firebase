@@ -60,6 +60,9 @@ struct Location: LocationItem {
 
 class ChatViewController: MessagesViewController {
 
+    private var senderPhotoURL: URL?
+    private var otherSenderPhotoURL: URL?
+    
     public static var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -71,13 +74,13 @@ class ChatViewController: MessagesViewController {
     }()
 
     public let otherUserEmail: String
-    private let conversationId: String?
+    private var conversationId: String?
     public var isNewConversation = false;
     
     private var messages = [Message]()
 
     private var selfSender: Sender? = {
-        guard let email = FirebaseAuth.Auth.auth().currentUser?.email as? String else {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
         }
         
@@ -308,14 +311,16 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         // Send Message
         if isNewConversation {
             // create convo in database
-            
-
             DatabaseManager.shared.createNewConversation(with: otherUserEmail,
                                                          otherUserName: self.title ?? "User",
                                                          firstMessage: message) { [weak self] success in
                 if success {
                     print("message sent")
                     self?.isNewConversation = false
+                    let newConversationId = "conversation_\(message.messageId)"
+                    self?.conversationId = newConversationId
+                    self?.listenForMessages(id: newConversationId, shouldScrollToBottom: true)
+                    self?.messageInputBar.inputTextView.text = nil
                 }
                 else {
                     print("failed to send")
@@ -334,9 +339,10 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             DatabaseManager.shared.sendMessage(to: conversationId,
                                                otherUserEmail: otherUserEmail,
                                                name: name,
-                                               newMessage: message) { success in
+                                               newMessage: message) { [weak self] success in
                 if success {
                     print("message sent")
+                    self?.messageInputBar.inputTextView.text = nil
                 }
                 else {
                     print("failed to send")
@@ -348,7 +354,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     private func createMessageId() -> String? {
         // date, otherUserEmail, senderEmail, randomInt
         guard
-            let currentUserEmail = FirebaseAuth.Auth.auth().currentUser?.email as? String
+            let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String
         else {
             return nil
         }
@@ -527,7 +533,74 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             break
         }
     }
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        let sender = message.sender
+        if sender.senderId == selfSender?.senderId {
+            // our message we've sent
+            return .link
+        }
+        else {
+            // received message
+            return .secondarySystemBackground
+        }
+    }
 
+    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        let sender = message.sender
+        if sender.senderId == selfSender?.senderId {
+            // our message we've sent
+            if let currentUserImageURL = self.senderPhotoURL {
+                avatarView.sd_setImage(with: currentUserImageURL)
+            }
+            else {
+                // fetch url
+                guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+                    return
+                }
+
+                let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+                let path = "images/\(safeEmail)_profile_picture.png"
+
+                StorageManager.shared.downoadURL(for: path) { [weak self] result in
+                    switch result {
+                    case .success(let url):
+                        self?.senderPhotoURL = url
+                        DispatchQueue.main.async {
+                            avatarView.sd_setImage(with: url)
+                        }
+                    case .failure(let error):
+                        print("\(error)")
+                    }
+                }
+            }
+        }
+        else {
+            // received message
+            if let otherUserImageURL = self.otherSenderPhotoURL {
+                avatarView.sd_setImage(with: otherUserImageURL)
+            }
+            else {
+                // fetch url
+                let email = self.otherUserEmail
+
+                let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+                let path = "images/\(safeEmail)_profile_picture.png"
+
+                StorageManager.shared.downoadURL(for: path) { [weak self] result in
+                    switch result {
+                    case .success(let url):
+                        self?.otherSenderPhotoURL = url
+                        DispatchQueue.main.async {
+                            avatarView.sd_setImage(with: url)
+                        }
+                    case .failure(let error):
+                        print("\(error)")
+                    }
+                }
+            }
+        }
+    }
 }
 
 extension ChatViewController: MessageCellDelegate {
